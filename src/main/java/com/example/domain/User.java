@@ -1,4 +1,4 @@
-package com.example.domain.security;
+package com.example.domain;
 
 import java.io.Serializable;
 import java.util.Collection;
@@ -17,6 +17,8 @@ import javax.persistence.OneToMany;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import com.example.domain.security.Authority;
+import com.example.domain.security.UserRole;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 

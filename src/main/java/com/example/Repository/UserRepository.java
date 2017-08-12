@@ -1,10 +1,10 @@
-package com.example.Repository;
+package com.example.repository;
 
 import java.util.List;
 
 import org.springframework.data.repository.CrudRepository;
 
-import com.example.domain.security.User;
+import com.example.domain.User;
 
 public interface UserRepository extends CrudRepository<User,Long>{
 	User findByUsername(String username);
