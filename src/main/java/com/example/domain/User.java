@@ -3,6 +3,7 @@ package com.example.domain;
 import java.io.Serializable;
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
@@ -13,6 +14,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -21,14 +23,14 @@ import com.example.domain.security.Authority;
 import com.example.domain.security.UserRole;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
-
 @Entity
 public class User implements UserDetails, Serializable{
-	public static final long serialVersionUID = 231234123L;
+
+	private static final long serialVersionUID = 902783495L;
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
-	@Column(name = "Id", nullable=false, updatable = false)
+	@Column(name="Id", nullable=false, updatable = false)
 	private Long id;
 	
 	private String username;
@@ -40,10 +42,24 @@ public class User implements UserDetails, Serializable{
 	private String phone;
 	private boolean enabled = true;
 	
-	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	@OneToMany(mappedBy = "user", cascade=CascadeType.ALL, fetch = FetchType.EAGER)
 	@JsonIgnore
 	private Set<UserRole> userRoles = new HashSet<>();
+	
+	
+	@OneToMany(cascade=CascadeType.ALL, mappedBy = "user")
+	private List<UserPayment> userPaymentList;
+	
+	@OneToMany(cascade=CascadeType.ALL, mappedBy = "user")
+	private List<UserShipping> userShippingList;
+	
+	
+	@OneToOne(cascade=CascadeType.ALL, mappedBy = "user")
+	private ShoppingCart shoppingCart;
 
+	@OneToMany(mappedBy="user")
+	private List<Order> orderList;
+	
 	public Long getId() {
 		return id;
 	}
@@ -100,9 +116,7 @@ public class User implements UserDetails, Serializable{
 		this.phone = phone;
 	}
 
-	public boolean isEnabled() {
-		return enabled;
-	}
+	
 
 	public void setEnabled(boolean enabled) {
 		this.enabled = enabled;
@@ -115,11 +129,52 @@ public class User implements UserDetails, Serializable{
 	public void setUserRoles(Set<UserRole> userRoles) {
 		this.userRoles = userRoles;
 	}
+	
+	
+
+	public List<UserPayment> getUserPaymentList() {
+		return userPaymentList;
+	}
+
+	public void setUserPaymentList(List<UserPayment> userPaymentList) {
+		this.userPaymentList = userPaymentList;
+	}
+	
+	
+
+	public List<UserShipping> getUserShippingList() {
+		return userShippingList;
+	}
+
+	public void setUserShippingList(List<UserShipping> userShippingList) {
+		this.userShippingList = userShippingList;
+	}
+	
+	
+
+	public ShoppingCart getShoppingCart() {
+		return shoppingCart;
+	}
+
+	public void setShoppingCart(ShoppingCart shoppingCart) {
+		this.shoppingCart = shoppingCart;
+	}
+	
+	
+
+	public List<Order> getOrderList() {
+		return orderList;
+	}
+
+	public void setOrderList(List<Order> orderList) {
+		this.orderList = orderList;
+	}
 
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {
+		
 		Set<GrantedAuthority> authorities = new HashSet<>();
-		userRoles.forEach(ur->authorities.add(new Authority(ur.getRole().getName())));
+		userRoles.forEach(ur -> authorities.add(new Authority(ur.getRole().getName())));
 		
 		return authorities;
 	}
@@ -142,5 +197,12 @@ public class User implements UserDetails, Serializable{
 		return true;
 	}
 	
-
+	@Override
+	public boolean isEnabled() {
+		return enabled;
+	}
+	
+	
+	
+	
 }

@@ -8,21 +8,22 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
-import com.example.repository.UserRepository;
 import com.example.domain.User;
+import com.example.repository.UserRepository;
 
 @Service
-public class UserSecurityService implements UserDetailsService {
+public class UserSecurityService implements UserDetailsService{
+	
 	private static final Logger LOG = LoggerFactory.getLogger(UserSecurityService.class);
 	
-	@Autowired
+	@Autowired 
 	private UserRepository userRepository;
 	
 	@Override
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 		User user = userRepository.findByUsername(username);
-		if(null == user){
-			LOG.warn("Username{} not found",username);
+		if(null == user) {
+			LOG.warn("Username {} not found", username);
 			throw new UsernameNotFoundException("Username "+username+" not found");
 		}
 		return user;
